@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build Binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: [amd64, arm64]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.23.5'
+
+      - name: Build
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          # Format binary name
+          OUTPUT="hazyctl-${{ matrix.goos }}-${{ matrix.goarch }}"
+          
+          # Add .exe extension for Windows
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            OUTPUT="$OUTPUT.exe"
+          fi
+
+          # Build with optimizations
+          go build -ldflags="-w -s" -o $OUTPUT
+          
+          # Prepare release directory
+          mkdir -p release
+          mv $OUTPUT release/
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
