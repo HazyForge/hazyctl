@@ -16,39 +16,72 @@ jobs:
       matrix:
         goos: [linux, windows, darwin]
         goarch: [amd64, arm64]
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.23.5'
+          go-version: '1.21'
 
       - name: Build
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
         run: |
-          # Format binary name
-          OUTPUT="hazyctl-${{ matrix.goos }}-${{ matrix.goarch }}"
-          
-          # Add .exe extension for Windows
+          # Build binary
+          OUTPUT="hazyctl"
           if [ "${{ matrix.goos }}" = "windows" ]; then
             OUTPUT="$OUTPUT.exe"
           fi
-
-          # Build with optimizations
-          go build -ldflags="-w -s" -o $OUTPUT
           
-          # Prepare release directory
+          go build -ldflags="-w -s -X 'main.version=${{ github.ref_name }}'" -o $OUTPUT
+
+          # Create archive directory structure
+          mkdir -p "hazyctl_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}"
+          cp $OUTPUT "hazyctl_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}/"
+          cp LICENSE "hazyctl_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}/"
+
+          # Package based on OS
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            zip -r "hazyctl_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}.zip" "hazyctl_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}/"
+          else
+            tar czvf "hazyctl_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}.tar.gz" "hazyctl_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}/"
+          fi
+
+          # Generate individual SHA checksum
+          shasum -a 256 "hazyctl_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}".* > "hazyctl_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}.sha256"
+
           mkdir -p release
-          mv $OUTPUT release/
+          mv "hazyctl_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}".* release/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: binaries
+          path: release/
+          retention-days: 1
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: binaries
+          path: release
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            release/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            release/hazyctl_*.tar.gz
+            release/hazyctl_*.zip
+            release/hazyctl_*.sha256
