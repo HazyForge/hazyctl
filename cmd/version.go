@@ -2,7 +2,7 @@ package cmd
 
 import (
     "fmt"
-    "hazyctl/pkg/version"
+    "github.com/hazyforge/hazyctl/pkg/version"
     "github.com/spf13/cobra"
 )
 

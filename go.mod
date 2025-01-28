@@ -1,4 +1,4 @@
-module hazyctl
+module github.com/hazyforge/hazyctl
 
 go 1.23
 

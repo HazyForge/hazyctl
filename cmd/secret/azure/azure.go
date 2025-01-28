@@ -2,7 +2,7 @@ package azure
 
 import (
 	"fmt"
-	azureUtils "hazyctl/pkg/utils"
+	azureUtils "github.com/hazyforge/hazyctl/pkg/utils"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

@@ -1,7 +1,7 @@
 package secret
 
 import (
-	"hazyctl/cmd/secret/azure"
+	"github.com/hazyforge/hazyctl/cmd/secret/azure"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

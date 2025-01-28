@@ -7,7 +7,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"hazyctl/pkg/version"
+	"github.com/hazyforge/hazyctl/pkg/version"
 	"io"
 	"net/http"
 	"os"
@@ -47,11 +47,11 @@ var updateCmd = &cobra.Command{
 
 		// Locate the current executable
 		exePath, err := os.Executable()
+		fmt.Println("exePath", exePath)
 		if err != nil {
 			panic(fmt.Errorf("failed to determine current exe path: %w", err))
 		}
 
-		// Download and verify new version
 		archivePath := downloadArchive(tempDir, latestVersion)
 		verifyChecksum(archivePath, latestVersion)
 		newBinaryPath := extractBinary(tempDir, archivePath, latestVersion)
@@ -248,9 +248,7 @@ func replaceCurrentBinary(currentBinPath, freshBinPath string) {
 	defer newFile.Close()
 
 	// Overwrite the current binary with the new one
-	if err := selfupdate.Apply(newFile, selfupdate.Options{
-		TargetPath: "/usr/local/bin/hazyctl",
-	}); err != nil {
+	if err := selfupdate.Apply(newFile, selfupdate.Options{}); err != nil {
 		panic(fmt.Errorf("failed to apply update: %w", err))
 	}
 	fmt.Printf("Replaced %s with %s\n", currentBinPath, freshBinPath)

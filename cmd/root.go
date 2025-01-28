@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"hazyctl/cmd/secret"
+	"github.com/hazyforge/hazyctl/cmd/secret"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
