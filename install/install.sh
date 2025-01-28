@@ -58,4 +58,4 @@ echo "Installing to $INSTALL_DIR (may require sudo)"
 sudo mv "$TMP_FILE" "$INSTALL_DIR/$BINARY_NAME"
 
 echo "Installation complete! Verify with:"
-echo "  hazyctl --version"
+echo "  hazyctl version"
