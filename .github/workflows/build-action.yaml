@@ -43,9 +43,9 @@ jobs:
           fi
           
           go build -ldflags "\
-            -X 'github.com/your/project/pkg/version.Version=${{ env.VERSION }}' \
-            -X 'github.com/your/project/pkg/version.Commit=${{ env.COMMIT }}' \
-            -X 'github.com/your/project/pkg/version.Date=${{ env.DATE }}'" \
+            -X 'github.com/hazyforge/hazyctl/pkg/version.Version=${{ env.VERSION }}' \
+            -X 'github.com/hazyforge/hazyctl/pkg/version.Commit=${{ env.COMMIT }}' \
+            -X 'github.com/hazyforge/hazyctl/pkg/version.Date=${{ env.DATE }}'" \
             -o $OUTPUT
 
           # Create archive directory structure
@@ -71,8 +71,8 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: binaries
-          path: release/
+          path: release
+          name: artifacts-${{ matrix.goos }}-${{ matrix.goarch }}
           retention-days: 1
 
   release:
@@ -81,11 +81,12 @@ jobs:
     needs: [build]
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: binaries
+          merge-multiple: true
           path: release
-
+          pattern: artifacts*/hazyctl_*
+          
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
