@@ -85,7 +85,6 @@ jobs:
         with:
           merge-multiple: true
           path: release
-          pattern: artifacts*/hazyctl_*
           
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
