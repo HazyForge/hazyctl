@@ -124,10 +124,10 @@ func downloadArchive(tempDir, version string) string {
 }
 
 func verifyChecksum(archivePath, version string) {
-	checksumUrl := fmt.Sprintf("https://github.com/HazyForge/hazyctl/releases/download/v0.0.2/hazyctl_0.0.2_linux_amd64.sha256")
+	checksumUrl := fmt.Sprintf("https://github.com/HazyForge/hazyctl/releases/download/v%s/%s.sha256", version, filepath.Base(archivePath))
 	resp, err := http.Get(checksumUrl)
 	if err != nil {
-		exitError("Error downloading checksum: %v", "hi")
+		exitError("Error downloading checksum: %v", err)
 	}
 	defer resp.Body.Close()
 
@@ -180,7 +180,7 @@ func extractTarGz(archivePath, tempDir string) string {
 			exitError("Error reading tar: %v", err)
 		}
 
-		if strings.Contains(hdr.Name, "hazyctl") && !strings.HasSuffix(hdr.Name, "/") {
+		if strings.Contains(hdr.Name, "/hazyctl") && !strings.HasSuffix(hdr.Name, "/") {
 			return extractFileFromArchive(tr, tempDir, hdr.Name)
 		}
 	}
@@ -240,8 +240,8 @@ func extractFileFromZip(f *zip.File, tempDir string) string {
 	return outPath
 }
 
-func replaceCurrentBinary(currentPath, newPath string) {
-	newFile, err := os.Open(newPath)
+func replaceCurrentBinary(currentBinPath, freshBinPath string) {
+	newFile, err := os.Open(freshBinPath)
 	if err != nil {
 		panic(fmt.Errorf("failed to open new binary: %w", err))
 	}
@@ -249,12 +249,11 @@ func replaceCurrentBinary(currentPath, newPath string) {
 
 	// Overwrite the current binary with the new one
 	if err := selfupdate.Apply(newFile, selfupdate.Options{
-		TargetPath: currentPath,
+		TargetPath: "/usr/local/bin/hazyctl",
 	}); err != nil {
-		// Optionally handle rollback or other error handling
 		panic(fmt.Errorf("failed to apply update: %w", err))
 	}
-	fmt.Printf("Replaced %s with %s\n", currentPath, newPath)
+	fmt.Printf("Replaced %s with %s\n", currentBinPath, freshBinPath)
 }
 
 func fileSHA256(path string) (string, error) {
