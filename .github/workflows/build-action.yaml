@@ -69,7 +69,7 @@ jobs:
           mv "hazyctl_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}".* release/
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: binaries
           path: release/
