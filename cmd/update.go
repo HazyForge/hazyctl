@@ -196,7 +196,7 @@ func extractZip(archivePath, tempDir string) string {
 	defer r.Close()
 
 	for _, f := range r.File {
-		if strings.Contains(f.Name, "hazyctl") && !f.FileInfo().IsDir() {
+		if strings.Contains(f.Name, "/hazyctl") && !f.FileInfo().IsDir() {
 			return extractFileFromZip(f, tempDir)
 		}
 	}
