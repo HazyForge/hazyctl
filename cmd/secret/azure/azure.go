@@ -86,8 +86,8 @@ func newExportCmd() *cobra.Command {
 	cmd.Flags().StringP("name", "n", "", "Name of the vault")
 	cmd.Flags().StringP("output", "o", "secrets.json", "Output file path")
 	cmd.MarkFlagRequired("name")
-	viper.BindPFlag("secret.outputFile", AzureCmd.PersistentFlags().Lookup("output"))
-
+	viper.BindPFlag("azure.export.name", AzureCmd.PersistentFlags().Lookup("name"))
+	viper.BindPFlag("azure.export.output", AzureCmd.PersistentFlags().Lookup("output"))
 
 	return cmd
 }
