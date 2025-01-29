@@ -13,10 +13,17 @@ Hazyctl is a utility tool designed for platform engineers, devops, or anyone who
 
 To install Hazyctl, you can use the following command which will download and run the installation script:
 
+Linux/MacOS:
+
 ```bash
 curl -sSL https://raw.githubusercontent.com/hazyforge/hazyctl/master/install/install.sh | bash
 ```
 
+Windows:
+
+```powershell
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/hazyforge/hazyctl/master/install/install.ps1 -OutFile install.ps1; .\install.ps1
+```
 
 Supported Features:
 - Self Update Command
