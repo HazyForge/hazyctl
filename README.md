@@ -22,10 +22,14 @@ curl -sSL https://raw.githubusercontent.com/hazyforge/hazyctl/master/install/ins
 Windows:
 
 ```powershell
+# Install exe 
 Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-WebRequest -Uri https://raw.githubusercontent.com/hazyforge/hazyctl/master/install/install.ps1 -OutFile install.ps1; .\install.ps1
+
+# Cleanup
+Remove-Item -Path .\install.ps1 -Force
 ```
 
 Supported Features:
-- Self Update Command
+- `update` Self Update Command
 - `secret azure export` Secrets To Local File
 - `secret azure migrate` Secrets between vaults 
