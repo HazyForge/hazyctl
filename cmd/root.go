@@ -19,11 +19,8 @@ import (
 // RootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "hazyctl",
-	Short: "A brief description of your application",
-	Long:  `this application is a helper for many things`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Short: "platform utilities",
+	Long:  `this cli is a helper for many things, and more to come`,
 }
 
 func Execute() {

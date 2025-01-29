@@ -15,6 +15,12 @@ var SecretCmd = &cobra.Command{
 	Short: "secrets utilities",
 	Long: `secrets utilities
     hazyctl secret [provider] [command]
+
+	example:
+	1. migrate secrets from one vault to another on azure key vault
+		hazyctl secret azure migrate --source vault1 --destination vault2 -s 1234567890
+	2. export secrets to a local file
+		hazyctl secret azure export --vault vault1 --output secrets.json
 	`,
 }
 

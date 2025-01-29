@@ -10,7 +10,7 @@ import (
 
 var AzureCmd = &cobra.Command{
 	Use:   "azure",
-	Short: "Azure Key Vault management utilities",
+	Short: "Azure Key Vault and secrets management utilities",
 }
 
 
