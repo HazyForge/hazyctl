@@ -61,7 +61,7 @@ Write-Output "Installing to $INSTALL_DIR (may require admin privileges)"
 if (-Not (Test-Path -Path $INSTALL_DIR)) {
     New-Item -ItemType Directory -Path $INSTALL_DIR -Force
 }
-Move-Item -Path "$TMP_DIR\$FILENAME\$BINARY_NAME" -Destination "$INSTALL_DIR\$BINARY_NAME" -Force
+Move-Item -Path "$TMP_DIR\$ARCHIVE_NAME\$BINARY_NAME" -Destination "$INSTALL_DIR\$BINARY_NAME" -Force
 
 # Check if .local/bin is in the PATH
 $localBinPath = [System.IO.Path]::Combine($HOME, ".local", "bin")

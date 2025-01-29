@@ -22,7 +22,7 @@ curl -sSL https://raw.githubusercontent.com/hazyforge/hazyctl/master/install/ins
 Windows:
 
 ```powershell
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/hazyforge/hazyctl/master/install/install.ps1 -OutFile install.ps1; .\install.ps1
+Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-WebRequest -Uri https://raw.githubusercontent.com/hazyforge/hazyctl/master/install/install.ps1 -OutFile install.ps1; .\install.ps1
 ```
 
 Supported Features:
